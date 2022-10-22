@@ -69,6 +69,44 @@ class HomeController extends Controller {
     console.log(list);
     ctx.body = JSON.parse(list.data);
   }
+
+  async setPoetry() {
+    const { ctx } = this;
+    const url = 'https://wallhaven.cc/hot?page=1';
+    const { data } = await this.ctx.curl(url);
+    // 详情接口
+    // https://wallhaven.cc/w/7p6wke 
+    console.log(data);
+
+    // toString是为了解析出buffer数据
+    const pageXml = data.toString();
+    // // console.log(pageXml);
+
+    // // decodeEntities参数是为了解决cheerio获取的中文乱码
+    const $ = cheerio.load(pageXml, { decodeEntities: false });
+
+    let images =[];
+
+    $('#thumbs').each(function() {
+      const html = $(this).html()
+      // console.log(html);
+      // const image = $('img').attr('src');
+      // console.log(image);
+      html.replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/g, function(match,capture) {
+        if (capture.startsWith("http") || capture.startsWith("https")) {
+          images.push(capture);
+        }else {
+          images.push('https:' + capture);
+        }
+      })
+      // images.push(image);
+    })
+
+    ctx.body = {
+      code:200,
+      images
+    };
+  }
 }
 
 module.exports = HomeController;

@@ -22,13 +22,13 @@ module.exports = appInfo => {
    * 修改启动端口号
    */
    config.cluster = {
-    listen: {
-      path: '',
-      port: 8080,
-      hostname: 'localhost',
-      // hostname: '192.168.110.95',
-      // hostname: '192.168.1.94',
-    },
+    // listen: {
+    //   path: '',
+    //   port: 8080,
+    //   hostname: 'localhost',
+    //   // hostname: '192.168.110.95',
+    //   // hostname: '192.168.1.94',
+    // },
   };
 
   // 跨域问题

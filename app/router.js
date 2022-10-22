@@ -9,4 +9,5 @@ module.exports = app => {
   router.get('/getPictureData', controller.home.getPictureData);
   router.get('/getPictureDataNan', controller.home.getPictureDataNan);
   router.post('/api/meme', controller.home.setMeme);
+  router.post('/api/poetry', controller.home.setPoetry);
 };
