@@ -133,20 +133,27 @@ class HomeController extends Controller {
     const { data:videoData } = await this.ctx.curl(urlop);
     const pageXmlData = videoData.toString();
     console.log(pageXmlData);
-
     if (!pageXmlData) {
-      ctx.body = {
+      return ctx.body = {
         code:201,
         data:[],
         msg:'解析失败'
       };
-    }else {
-      ctx.body = {
-        code:201,
-        data: JSON.parse(pageXmlData),
-        msg:'解析成功'
-      };
     }
+    const pageXmlDataList = JSON.parse(pageXmlData);
+    const videoUrl = pageXmlDataList["item_list"][0]["video"]["play_addr"]["url_list"][0];
+    const musicUrl = pageXmlDataList["item_list"][0]["music"]["play_url"]["url_list"][0];
+    const parmas = {
+      videoUrl:videoUrl.replace('wm',''),
+      video:videoUrl,
+      musicUrl,
+    }
+
+    ctx.body = {
+      code:201,
+      data: parmas,
+      msg:'解析成功'
+    };
 
   }
 
