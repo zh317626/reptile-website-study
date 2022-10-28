@@ -110,8 +110,15 @@ class HomeController extends Controller {
 
   async setDouyin() {
     const { ctx } = this;
-    const url = '6.61 Vyg:/ 嘿嘿嘿 来打我呀～🫣 https://v.douyin.com/MXbN15y/ 复制此链接，打开Dou音搜索，直接观看视频！';
+    const {url} = ctx.request.body;
     const urls = this.httpString(url);
+    if (!url) {
+      return ctx.body = {
+        code:201,
+        data:[],
+        msg:'请输入链接'
+      }
+    };
     const { data } = await this.ctx.curl(urls);
     // toString是为了解析出buffer数据
     const pageXml = data.toString();
