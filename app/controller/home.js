@@ -107,6 +107,58 @@ class HomeController extends Controller {
       images
     };
   }
+
+  async setDouyin() {
+    const { ctx } = this;
+    const url = '6.61 Vyg:/ 嘿嘿嘿 来打我呀～🫣 https://v.douyin.com/MXbN15y/ 复制此链接，打开Dou音搜索，直接观看视频！';
+    const urls = this.httpString(url);
+    const { data } = await this.ctx.curl(urls);
+    // toString是为了解析出buffer数据
+    const pageXml = data.toString();
+    // // console.log(pageXml);
+
+    // // decodeEntities参数是为了解决cheerio获取的中文乱码
+    const $ = cheerio.load(pageXml, { decodeEntities: false });
+    let urlop = ''; 
+
+    $('a').each(function() {
+      const a = $(this).attr('href');
+      const video = a.indexOf('video');
+      const id = a.indexOf('?');
+      urlop = `https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/?item_ids=` + a.substring(video + 6,id-1);
+    });
+
+    console.log(urlop);
+
+    const { data:videoData } = await this.ctx.curl(urlop);
+    const pageXmlData = videoData.toString();
+    console.log(pageXmlData);
+
+    if (!pageXmlData) {
+      ctx.body = {
+        code:201,
+        data:[],
+        msg:'解析失败'
+      };
+    }else {
+      ctx.body = {
+        code:201,
+        data: JSON.parse(pageXmlData),
+        msg:'解析成功'
+      };
+    }
+
+  }
+
+  //解析字符串里面的url
+  httpString (s){
+    let reg = /(https?|http|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g;
+    try {
+        return s.match(reg)[0];
+    } catch (error) {
+        return null;
+    }
+  }
 }
 
 module.exports = HomeController;
