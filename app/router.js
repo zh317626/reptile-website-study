@@ -11,4 +11,10 @@ module.exports = app => {
   router.post('/api/meme', controller.home.setMeme);
   router.post('/api/poetry', controller.home.setPoetry);
   router.post('/api/douyin', controller.home.setDouyin);
+  router.post('/api/ks', controller.home.setKuaishou);
+  router.post('/api/cou', controller.home.setCut);
+
+
+  // 壁纸接口
+  router.post('/api/wall/index', controller.wallhaven.mallIndex);
 };
