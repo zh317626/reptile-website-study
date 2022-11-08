@@ -202,11 +202,17 @@ class HomeController extends Controller {
     const {url} = ctx.request.body;
     const { data } = await this.ctx.curl(url);
     console.log(data);
-    const dir = path.join('app/public/' + new Date().getTime() + '.mp4');
+    const dir = path.join('app/public/' + new Date().getTime() + '.jpg');
     // 生成图片2(把buffer写入到图片文件)
     fs.writeFile(dir, data, function (err) {
       if (err) {}
     });
+
+    ctx.body = {
+      code:200,
+      data: dir,
+      msg:'解析成功'
+    };
   }
 
   //解析字符串里面的url
