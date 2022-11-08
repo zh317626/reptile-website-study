@@ -18,4 +18,5 @@ module.exports = app => {
   // 壁纸接口
   router.post('/api/wall/index', controller.wallhaven.mallIndex);
   router.post('/api/wall/list', controller.wallhaven.wallList);
+  router.post('/api/wall/info', controller.wallhaven.wallInfo);
 };

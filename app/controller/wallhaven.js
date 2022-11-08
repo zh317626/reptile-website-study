@@ -102,6 +102,36 @@ class wallController extends Controller {
             count:info.length
         };
     }
+
+    // 获取详情
+    async wallInfo() {
+        const { ctx } = this;
+        let { url } = ctx.request.body;
+        if (!url) {
+            return ctx.body = { code:201,msg:'url不能为空' };
+        };
+        const list = await ctx.curl(url,{
+            method:'GET',
+            headers:{
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
+            },
+        });
+        // toString是为了解析出buffer数据
+        const pageXml = list.data.toString();
+
+        // decodeEntities参数是为了解决cheerio获取的中文乱码
+        const $ = cheerio.load(pageXml, { decodeEntities: false });
+        let img_url = '';
+        $('.scrollbox img').each(function (index,item) {
+            img_url = $(item).attr('src');
+        });
+
+        ctx.body = {
+            code:200,
+            img_url,
+            msg:'获取详情成功'
+        };
+    }
 }
 
 module.exports = wallController;
